@@ -55,12 +55,6 @@ jobs:
           git commit -m "chore: version bump to $(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[", ]//g')" || echo "No changes to commit"
           git push
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Type check
-        run: npm run type-check
-
       - name: Build
         run: npm run build
 

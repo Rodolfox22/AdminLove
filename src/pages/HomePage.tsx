@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore, useTransaccionStore, useHistorialStore, useDistribucionStore } from '@/store';
+import { useAuthStore, useTransaccionStore, useHistorialStore } from '@/store';
 import { formatearMonto, formatearFecha } from '@/utils/helpers';
 import { 
   Plus, 
@@ -15,7 +15,6 @@ export default function HomePage() {
   const { usuario } = useAuthStore();
   const { getTotalIngresos, getTotalGastos, getDisponible } = useTransaccionStore();
   const { historial } = useHistorialStore();
-  const { distribucionActivaId, activarDistribucion } = useDistribucionStore();
   
   const disponible = getDisponible();
   const ultimoHistorial = historial[0];

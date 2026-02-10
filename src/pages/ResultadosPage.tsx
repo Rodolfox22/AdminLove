@@ -13,8 +13,8 @@ import {
 export default function ResultadosPage() {
   const navigate = useNavigate();
   const { usuario } = useAuthStore();
-  const { getTotalIngresos, getTotalGastos, getDisponible, transacciones } = useTransaccionStore();
-  const { getDistribucionActiva, limpiarTransacciones } = useDistribucionStore();
+  const { getTotalIngresos, getTotalGastos, getDisponible, transacciones, limpiarTransacciones } = useTransaccionStore();
+  const { getDistribucionActiva } = useDistribucionStore();
   const { agregarRegistro } = useHistorialStore();
   
   const disponible = getDisponible();

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDistribucionStore, useConfiguracionStore } from '@/store';
+import { useDistribucionStore } from '@/store';
 import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO } from '@/utils/constants';
 import { generarId } from '@/utils/helpers';
 import type { Rubro } from '@/types';
@@ -19,7 +19,6 @@ import {
 export default function ConfiguracionPage() {
   const navigate = useNavigate();
   const { distribucionActivaId, getDistribucionActiva, actualizarDistribucion } = useDistribucionStore();
-  const { configuracion, setConfiguracion } = useConfiguracionStore();
   
   const distribucion = getDistribucionActiva();
   const rubros = distribucion?.rubros || [];
