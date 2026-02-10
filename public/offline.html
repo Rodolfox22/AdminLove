@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sin conexión - AdminLove</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      
+      .container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+      
+      .icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+        color: #1f2937;
+        margin-bottom: 10px;
+      }
+      
+      p {
+        color: #6b7280;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+      
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #3b82f6;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+      
+      .btn:hover {
+        background: #2563eb;
+      }
+      
+      .features {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+      
+      .features h2 {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 15px;
+      }
+      
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #374151;
+      }
+      
+      .feature-icon {
+        width: 24px;
+        height: 24px;
+        background: #dbeafe;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon">📡</div>
+      <h1>Sin conexión</h1>
+      <p>Parece que no tienes conexión a internet en este momento. No te preocupes, AdminLove guarda tus datos localmente.</p>
+      
+      <a href="/" class="btn" onclick="window.location.reload()">
+        🔄 Reintentar
+      </a>
+      
+      <div class="features">
+        <h2>Mientras estás offline puedes:</h2>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Crear nuevas distribuciones</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Agregar ingresos y gastos</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Ver tu historial local</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Configurar rubros</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Auto-refresh when online
+      window.addEventListener('online', () => {
+        window.location.reload();
+      });
+    </script>
+  </body>
+</html>
