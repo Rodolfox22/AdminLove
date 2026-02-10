@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuthStore, useConfiguracionStore } from '@/store';
+import { useAuthStore } from '@/store';
 import { cn } from '@/utils/helpers';
+import { VERSION } from '@/version';
+import AboutDialog from '@/components/ui/AboutDialog';
 import {
   Home,
   DollarSign,
@@ -11,15 +13,16 @@ import {
   X,
   LogOut,
   User,
-  ChevronRight
+  ChevronRight,
+  Info
 } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { usuario, logout } = useAuthStore();
-  const { configuracion } = useConfiguracionStore();
 
   const handleLogout = () => {
     logout();
@@ -43,13 +46,22 @@ export default function Navbar() {
             <span>AdminLove</span>
           </Link>
           
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg hover:bg-accent"
-            aria-label="Menú"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAbout(true)}
+              className="p-2 rounded-lg hover:bg-accent"
+              aria-label="Acerca de"
+            >
+              <Info size={20} />
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg hover:bg-accent"
+              aria-label="Menú"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
         
         {/* Menú móvil */}
@@ -121,7 +133,7 @@ export default function Navbar() {
           })}
         </nav>
         
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border space-y-2">
           <Link
             to="/mis-distribuciones"
             className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors"
@@ -129,6 +141,15 @@ export default function Navbar() {
             <DollarSign size={20} />
             <span>Mis Distribuciones</span>
           </Link>
+          
+          <button
+            onClick={() => setShowAbout(true)}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-accent transition-colors text-left"
+          >
+            <Info size={20} />
+            <span>Acerca de</span>
+            <span className="ml-auto text-xs text-muted-foreground">v{VERSION}</span>
+          </button>
           
           <div className="flex items-center gap-3 px-4 py-3 mt-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -148,6 +169,9 @@ export default function Navbar() {
 
       {/* Spacer para el contenido */}
       <div className="h-16 lg:hidden" />
+      
+      {/* About Dialog */}
+      <AboutDialog isOpen={showAbout} onClose={() => setShowAbout(false)} />
     </>
   );
 }
