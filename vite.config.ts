@@ -18,8 +18,8 @@ export default defineConfig({
         background_color: '#F8F9FA',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/AdminLove/',
+        start_url: '/AdminLove/',
         icons: []
       },
       workbox: {
