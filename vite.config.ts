@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'url';
 
 export default defineConfig({
-  base: '/', // Necesario para GitHub Pages
+  base: '/AdminLove/', // Necesario para GitHub Pages con subdirectorio
   plugins: [
     react(),
     VitePWA({
