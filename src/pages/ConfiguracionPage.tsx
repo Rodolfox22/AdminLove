@@ -196,19 +196,32 @@ export default function ConfiguracionPage() {
   };
   
   return (
-    <div className="space-y-4 sm:space-y-6 animate-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h1 className="text-xl sm:text-2xl font-bold">Configuración</h1>
+    <div className="space-y-4 sm:space-y-6 animate-in pb-20 lg:pb-0">
+      {/* Header móvil con botones de acción */}
+      <div className="lg:hidden fixed top-14 left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center justify-between">
+        {/* Botón agregar a la izquierda */}
+        <button
+          onClick={handleAgregarRubro}
+          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+        >
+          <Plus className="w-5 h-5" />
+        </button>
+        
+        {/* Spacer en el centro */}
+        <div className="flex-1" />
+        
+        {/* Botón guardar a la derecha */}
         <button
           onClick={handleGuardar}
           disabled={isSaving || sumaPorcentajes > 100}
-          className="btn-primary px-3 sm:px-4 py-2 flex items-center gap-2 text-sm sm:text-base disabled:opacity-50"
+          className="w-10 h-10 rounded-full bg-success text-white flex items-center justify-center shadow-lg disabled:opacity-50"
         >
-          <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>{isSaving ? 'Guardando...' : 'Guardar'}</span>
+          <Save className="w-5 h-5" />
         </button>
       </div>
+
+      {/* Spacer para el header fijo móvil */}
+      <div className="lg:hidden h-16" />
       
       {/* Nombre de distribución */}
       <div className="bg-card rounded-xl p-4 border border-border space-y-3">
@@ -229,9 +242,10 @@ export default function ConfiguracionPage() {
             <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             Rubros
           </h2>
+          {/* Botón agregar solo visible en PC */}
           <button
             onClick={handleAgregarRubro}
-            className="btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
+            className="hidden sm:flex btn-secondary px-3 py-1.5 text-sm items-center gap-1"
           >
             <Plus className="w-3 h-3" />
             <span>Agregar</span>

@@ -51,10 +51,12 @@ export default function Navbar() {
     { path: '/configuracion', label: 'Ajustes', icon: Settings }
   ];
 
-  // Elementos para el bottom navigation
-  const bottomNavItems = [
+  // Elementos para el bottom navigation - PC (escritorio)
+  const bottomNavItemsPC = [
     { path: '/', label: 'Inicio', icon: Home },
     { path: '/distribuir', label: 'Dividir', icon: DollarSign },
+    { path: '/mis-distribuciones', label: 'Mis Distribuciones', icon: List },
+    { path: '/historial', label: 'Historial', icon: History },
     { path: '/configuracion', label: 'Ajustes', icon: Settings }
   ];
 
@@ -125,31 +127,8 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Bottom Navigation para móviles */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border lg:hidden">
-        <div className="flex items-center justify-around h-16 px-2">
-          {bottomNavItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  'flex flex-col items-center justify-center gap-1 p-2 rounded-lg transition-colors flex-1',
-                  isActive
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <Icon size={22} />
-                <span className="text-xs">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      {/* Bottom Navigation para móviles - solo spacer, sin menú */}
+      <div className="lg:hidden h-16" />
 
       {/* Sidebar escritorio */}
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border hidden lg:flex flex-col z-40">
@@ -209,12 +188,34 @@ export default function Navbar() {
         </div>
       </aside>
 
-      {/* Spacer para el contenido (header + bottom nav en móvil) */}
-      <div className="h-16 lg:hidden" />
-      <div className="lg:hidden h-16" /> {/* Spacer adicional para bottom nav */}
-      
-      {/* Spacer solo para header en desktop */}
-      <div className="hidden lg:block h-16" />
+      {/* Bottom Navigation para PC (escritorio) */}
+      <nav className="hidden lg:flex fixed bottom-0 left-64 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border">
+        <div className="flex items-center justify-around w-full h-14 px-4 max-w-7xl mx-auto">
+          {bottomNavItemsPC.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3 py-2 rounded-lg transition-colors',
+                  isActive
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                )}
+              >
+                <Icon size={18} />
+                <span className="text-xs sm:text-sm">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Spacer para el contenido (bottom nav en PC) */}
+      <div className="hidden lg:block h-14" />
       
       {/* About Dialog */}
       <AboutDialog isOpen={showAbout} onClose={() => setShowAbout(false)} />
