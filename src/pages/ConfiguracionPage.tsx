@@ -258,17 +258,17 @@ export default function ConfiguracionPage() {
                 </button>
               </div>
               
-            {/* Color - Selector colapsable */}
-              <ColorSelector
-                color={rubro.color}
-                onChange={(color) => handleActualizarRubro(rubro.id, { color })}
-              />
-              
-              {/* Icono - Selector */}
-              <IconSelector
-                icono={rubro.icono}
-                onChange={(icono) => handleActualizarRubro(rubro.id, { icono })}
-              />
+            {/* Color e Icono - Selectores juntos */}
+              <div className="flex items-center gap-1">
+                <ColorSelector
+                  color={rubro.color}
+                  onChange={(color) => handleActualizarRubro(rubro.id, { color })}
+                />
+                <IconSelector
+                  icono={rubro.icono}
+                  onChange={(icono) => handleActualizarRubro(rubro.id, { icono })}
+                />
+              </div>
               
               {/* Nombre y porcentaje */}
               <input
