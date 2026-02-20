@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+# 👇 ESTO ES LO QUE FALTABA
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
