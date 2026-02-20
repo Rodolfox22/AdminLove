@@ -14,7 +14,8 @@ import {
   LogOut,
   User,
   ChevronRight,
-  Info
+  Info,
+  List
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -32,6 +33,7 @@ export default function Navbar() {
   const navItems = [
     { path: '/', label: 'Inicio', icon: Home },
     { path: '/distribuir', label: 'Distribuir', icon: DollarSign },
+    { path: '/mis-distribuciones', label: 'Mis Distribuciones', icon: List },
     { path: '/historial', label: 'Historial', icon: History },
     { path: '/configuracion', label: 'Configuración', icon: Settings }
   ];
