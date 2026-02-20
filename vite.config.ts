@@ -19,7 +19,7 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         scope: '/AdminLove/',
-        start_url: '/AdminLove/',
+        start_url: '/',
         icons: []
       },
       workbox: {
