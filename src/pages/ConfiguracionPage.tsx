@@ -93,16 +93,16 @@ export default function ConfiguracionPage() {
   };
   
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 sm:space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Configuración</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Configuración</h1>
         <button
           onClick={handleGuardar}
           disabled={isSaving || sumaPorcentajes > 100}
-          className="btn-primary px-4 py-2 flex items-center gap-2 disabled:opacity-50"
+          className="btn-primary px-3 sm:px-4 py-2 flex items-center gap-2 text-sm sm:text-base disabled:opacity-50"
         >
-          <Save size={18} />
+          <Save className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>{isSaving ? 'Guardando...' : 'Guardar'}</span>
         </button>
       </div>
@@ -120,17 +120,17 @@ export default function ConfiguracionPage() {
       </div>
       
       {/* Rubros */}
-      <div className="bg-card rounded-xl p-4 border border-border space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold flex items-center gap-2">
-            <Settings size={18} />
+      <div className="bg-card rounded-xl p-3 sm:p-4 border border-border space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h2 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
+            <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             Rubros
           </h2>
           <button
             onClick={handleAgregarRubro}
             className="btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
           >
-            <Plus size={16} />
+            <Plus className="w-3 h-3" />
             <span>Agregar</span>
           </button>
         </div>
@@ -140,23 +140,23 @@ export default function ConfiguracionPage() {
           {rubrosEditados.map((rubro, index) => (
             <div
               key={rubro.id}
-              className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/30"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border border-border bg-muted/30"
             >
               {/* Controles de orden */}
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-row sm:flex-col gap-1">
                 <button
                   onClick={() => handleMoverRubro(index, 'arriba')}
                   disabled={index === 0}
                   className="p-1 rounded hover:bg-accent disabled:opacity-30"
                 >
-                  <ChevronUp size={14} />
+                  <ChevronUp className="w-3 h-3" />
                 </button>
                 <button
                   onClick={() => handleMoverRubro(index, 'abajo')}
                   disabled={index === rubrosEditados.length - 1}
                   className="p-1 rounded hover:bg-accent disabled:opacity-30"
                 >
-                  <ChevronDown size={14} />
+                  <ChevronDown className="w-3 h-3" />
                 </button>
               </div>
               
@@ -179,18 +179,20 @@ export default function ConfiguracionPage() {
                 type="text"
                 value={rubro.nombre}
                 onChange={(e) => handleActualizarRubro(rubro.id, { nombre: e.target.value })}
-                className="flex-1 bg-transparent font-medium focus:outline-none"
+                className="flex-1 bg-transparent font-medium focus:outline-none text-sm min-w-0"
                 placeholder="Nombre"
               />
-              <input
-                type="number"
-                value={rubro.porcentaje}
-                onChange={(e) => handleActualizarRubro(rubro.id, { porcentaje: parseInt(e.target.value) || 0 })}
-                className="w-16 text-center bg-transparent font-medium focus:outline-none border-b border-border"
-                min="0"
-                max="100"
-              />
-              <span className="text-muted-foreground">%</span>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  value={rubro.porcentaje}
+                  onChange={(e) => handleActualizarRubro(rubro.id, { porcentaje: parseInt(e.target.value) || 0 })}
+                  className="w-12 sm:w-16 text-center bg-transparent font-medium focus:outline-none border-b border-border text-sm"
+                  min="0"
+                  max="100"
+                />
+                <span className="text-muted-foreground text-sm">%</span>
+              </div>
               
               {/* Eliminar */}
               <button
@@ -227,12 +229,12 @@ export default function ConfiguracionPage() {
       
       {/* Acciones adicionales */}
       <div className="grid grid-cols-2 gap-3">
-        <button className="btn-secondary py-3 flex items-center justify-center gap-2">
-          <Download size={18} />
+        <button className="btn-secondary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm">
+          <Download className="w-4 h-4" />
           <span>Exportar</span>
         </button>
-        <button className="btn-secondary py-3 flex items-center justify-center gap-2">
-          <Upload size={18} />
+        <button className="btn-secondary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm">
+          <Upload className="w-4 h-4" />
           <span>Importar</span>
         </button>
       </div>

@@ -82,25 +82,25 @@ export default function AuthPage() {
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-sm sm:max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <DollarSign size={32} className="text-primary" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mb-3 sm:mb-4">
+            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold">AdminLove</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold">AdminLove</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Gestiona tus ingresos con sabiduría y propósito
           </p>
         </div>
         
         {/* Card */}
-        <div className="bg-card rounded-xl shadow-lg p-6 border border-border">
+        <div className="bg-card rounded-xl shadow-lg p-4 sm:p-6 border border-border">
           {/* Tabs */}
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-2 mb-4 sm:mb-6">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+              className={`flex-1 py-2 px-3 sm:px-4 rounded-lg font-medium text-sm sm:text-base transition-colors ${
                 isLogin
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -110,7 +110,7 @@ export default function AuthPage() {
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+              className={`flex-1 py-2 px-3 sm:px-4 rounded-lg font-medium text-sm sm:text-base transition-colors ${
                 !isLogin
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -121,20 +121,20 @@ export default function AuthPage() {
           </div>
           
           {/* Formulario */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {!isLogin && (
               <div>
                 <label htmlFor="nombre" className="block text-sm font-medium mb-1">
                   Nombre
                 </label>
                 <div className="relative">
-                  <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <input
                     type="text"
                     id="nombre"
                     name="nombre"
                     placeholder="Tu nombre"
-                    className="input-field pl-10"
+                    className="input-field pl-9 sm:pl-10"
                     disabled={isLoading}
                   />
                 </div>
@@ -146,14 +146,14 @@ export default function AuthPage() {
                 Email
               </label>
               <div className="relative">
-                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                 <input
                   type="email"
                   id="email"
                   name="email"
                   placeholder="tu@email.com"
                   required
-                  className="input-field pl-10"
+                  className="input-field pl-9 sm:pl-10"
                   disabled={isLoading}
                 />
               </div>
@@ -164,14 +164,14 @@ export default function AuthPage() {
                 Contraseña
               </label>
               <div className="relative">
-                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                 <input
                   type="password"
                   id="password"
                   name="password"
                   placeholder="••••••••"
                   required
-                  className="input-field pl-10"
+                  className="input-field pl-9 sm:pl-10"
                   disabled={isLoading}
                 />
               </div>
@@ -184,21 +184,21 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full btn-primary py-3 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full btn-primary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm sm:text-base disabled:opacity-50"
             >
               {isLoading ? (
                 <span className="animate-pulse">Procesando...</span>
               ) : (
                 <>
                   {isLogin ? 'Ingresar' : 'Crear Cuenta'}
-                  <ArrowRight size={18} />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </>
               )}
             </button>
           </form>
           
           {/* Divider */}
-          <div className="relative my-6">
+          <div className="relative my-4 sm:my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border" />
             </div>
@@ -210,11 +210,10 @@ export default function AuthPage() {
           {/* Modo local */}
           <button
             onClick={handleModoLocal}
-            className="w-full btn-secondary py-3 flex items-center justify-center gap-2"
+            className="w-full btn-secondary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             <span>📱</span>
             <span>Usar sin cuenta</span>
-            <span className="text-xs text-muted-foreground">(solo este dispositivo)</span>
           </button>
         </div>
         

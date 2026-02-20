@@ -42,26 +42,26 @@ export default function Navbar() {
     <>
       {/* Navbar móvil */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border lg:hidden">
-        <div className="flex items-center justify-between h-16 px-4">
-          <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+        <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4">
+          <Link to="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl">
             <span className="text-primary">💰</span>
-            <span>AdminLove</span>
+            <span className="hidden sm:inline">AdminLove</span>
           </Link>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setShowAbout(true)}
               className="p-2 rounded-lg hover:bg-accent"
               aria-label="Acerca de"
             >
-              <Info size={20} />
+              <Info className="w-5 h-5 sm:size-5" />
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg hover:bg-accent"
               aria-label="Menú"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>

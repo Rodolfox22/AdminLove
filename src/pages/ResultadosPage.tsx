@@ -69,22 +69,22 @@ export default function ResultadosPage() {
   };
   
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 sm:space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         <button
           onClick={() => navigate('/distribuir')}
           className="p-2 rounded-lg hover:bg-accent transition-colors"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
-        <h1 className="text-2xl font-bold">Resultados</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Resultados</h1>
       </div>
       
       {/* Disponible */}
-      <div className="bg-gradient-to-r from-primary/20 to-primary/5 rounded-xl p-6 text-center">
+      <div className="bg-gradient-to-r from-primary/20 to-primary/5 rounded-xl p-4 sm:p-6 text-center">
         <p className="text-sm text-muted-foreground mb-1">Dinero Disponible</p>
-        <p className="text-4xl font-bold text-primary">{formatearMonto(disponible)}</p>
+        <p className="text-3xl sm:text-4xl font-bold text-primary">{formatearMonto(disponible)}</p>
       </div>
       
       {/* Distribución */}
@@ -140,9 +140,9 @@ export default function ResultadosPage() {
       </div>
       
       {/* Resumen */}
-      <div className="bg-muted/50 rounded-xl p-4 space-y-2">
-        <h3 className="font-semibold">Resumen</h3>
-        <div className="grid grid-cols-2 gap-4 text-sm">
+      <div className="bg-muted/50 rounded-xl p-3 sm:p-4 space-y-2">
+        <h3 className="font-semibold text-sm sm:text-base">Resumen</h3>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Ingresos totales</p>
             <p className="font-medium text-ingreso">{formatearMonto(getTotalIngresos())}</p>
@@ -166,17 +166,17 @@ export default function ResultadosPage() {
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={handleNuevaDistribucion}
-          className="btn-secondary py-3 flex items-center justify-center gap-2"
+          className="btn-secondary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm sm:text-base"
         >
-          <Plus size={20} />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Nueva</span>
         </button>
         
         <button
           onClick={handleGuardar}
-          className="btn-primary py-3 flex items-center justify-center gap-2"
+          className="btn-primary py-2 sm:py-3 flex items-center justify-center gap-2 text-sm sm:text-base"
         >
-          <Save size={20} />
+          <Save className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Guardar</span>
         </button>
       </div>

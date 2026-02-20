@@ -36,24 +36,24 @@ export default function HistorialPage() {
   const totalDisponible = historialFiltrado.reduce((sum, r) => sum + r.dinero_disponible, 0);
   
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 sm:space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <History size={24} />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+          <History className="w-5 h-5 sm:w-6 sm:h-6" />
           Historial
         </h1>
         <button className="btn-secondary px-3 py-1.5 text-sm flex items-center gap-1">
-          <Download size={16} />
+          <Download className="w-4 h-4" />
           <span>Exportar</span>
         </button>
       </div>
       
       {/* Filtros */}
-      <div className="bg-card rounded-xl p-4 border border-border">
+      <div className="bg-card rounded-xl p-3 sm:p-4 border border-border">
         <div className="flex items-center gap-2 mb-3">
-          <Filter size={16} />
-          <span className="font-medium">Filtros</span>
+          <Filter className="w-4 h-4" />
+          <span className="font-medium text-sm sm:text-base">Filtros</span>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-2">
           {[
@@ -79,18 +79,18 @@ export default function HistorialPage() {
       </div>
       
       {/* Resumen del período */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-card rounded-xl p-4 border border-border">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border">
           <p className="text-xs text-muted-foreground">Ingresos</p>
-          <p className="text-lg font-semibold text-ingreso">{formatearMonto(totalIngresos)}</p>
+          <p className="text-base sm:text-lg font-semibold text-ingreso">{formatearMonto(totalIngresos)}</p>
         </div>
-        <div className="bg-card rounded-xl p-4 border border-border">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border">
           <p className="text-xs text-muted-foreground">Gastos</p>
-          <p className="text-lg font-semibold text-gasto">{formatearMonto(totalGastos)}</p>
+          <p className="text-base sm:text-lg font-semibold text-gasto">{formatearMonto(totalGastos)}</p>
         </div>
-        <div className="bg-card rounded-xl p-4 border border-border">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border col-span-2 sm:col-span-1">
           <p className="text-xs text-muted-foreground">Disponible</p>
-          <p className={`text-lg font-semibold ${totalDisponible >= 0 ? 'text-primary' : 'text-destructive'}`}>
+          <p className={`text-base sm:text-lg font-semibold ${totalDisponible >= 0 ? 'text-primary' : 'text-destructive'}`}>
             {formatearMonto(totalDisponible)}
           </p>
         </div>
@@ -141,9 +141,9 @@ export default function HistorialPage() {
       {/* Modal de detalle */}
       {registroSeleccionado && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setRegistroSeleccionado(null)}>
-          <div className="bg-card rounded-xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-card rounded-xl p-4 sm:p-6 max-w-md w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Detalle</h2>
+              <h2 className="text-lg sm:text-xl font-bold">Detalle</h2>
               <button
                 onClick={() => setRegistroSeleccionado(null)}
                 className="p-2 rounded-lg hover:bg-accent"
@@ -153,13 +153,13 @@ export default function HistorialPage() {
             </div>
             
             <div className="space-y-4">
-              <div className="pb-4 border-b border-border">
+              <div className="pb-3 sm:pb-4 border-b border-border">
                 <p className="text-sm text-muted-foreground">Distribución</p>
                 <p className="font-medium">{registroSeleccionado.distribucion_nombre}</p>
                 <p className="text-sm text-muted-foreground">{formatearFecha(registroSeleccionado.fecha, 'larga')}</p>
               </div>
               
-              <div className="grid grid-cols-3 gap-4 pb-4 border-b border-border">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 pb-3 sm:pb-4 border-b border-border">
                 <div>
                   <p className="text-xs text-muted-foreground">Ingresos</p>
                   <p className="font-semibold text-ingreso">{formatearMonto(registroSeleccionado.total_ingresos)}</p>

@@ -60,15 +60,15 @@ export default function MisDistribucionesPage() {
   };
   
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 sm:space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Mis Distribuciones</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Mis Distribuciones</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="btn-primary px-4 py-2 flex items-center gap-2"
+          className="btn-primary px-3 sm:px-4 py-2 flex items-center gap-2 text-sm sm:text-base"
         >
-          <Plus size={18} />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Nueva</span>
         </button>
       </div>
@@ -98,22 +98,22 @@ export default function MisDistribucionesPage() {
           distribuciones.map((distribucion) => (
             <div
               key={distribucion.id}
-              className={`bg-card rounded-xl p-4 border border-border ${
+              className={`bg-card rounded-xl p-3 sm:p-4 border border-border ${
                 distribucion.es_activa ? 'ring-2 ring-primary' : ''
               }`}
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center">
                     {distribucion.es_activa ? (
-                      <Check size={20} className="text-primary" />
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     ) : (
-                      <span>📋</span>
+                      <span className="text-sm sm:text-base">📋</span>
                     )}
                   </div>
                   <div>
-                    <h3 className="font-semibold">{distribucion.nombre}</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <h3 className="font-semibold text-sm sm:text-base">{distribucion.nombre}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       {distribucion.rubros.length} rubros
                     </p>
                   </div>
@@ -149,30 +149,30 @@ export default function MisDistribucionesPage() {
               </div>
               
               {/* Acciones */}
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {!distribucion.es_activa && (
                   <button
                     onClick={() => handleActivar(distribucion.id)}
-                    className="flex-1 btn-primary py-2 text-sm flex items-center justify-center gap-1"
+                    className="flex-1 sm:flex-none btn-primary py-2 px-3 text-xs sm:text-sm flex items-center justify-center gap-1"
                   >
-                    <Check size={16} />
+                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Activar</span>
                   </button>
                 )}
                 
                 <button
                   onClick={() => handleDuplicar(distribucion.id)}
-                  className="btn-secondary py-2 px-3 text-sm flex items-center gap-1"
+                  className="btn-secondary py-2 px-2 sm:px-3 text-xs sm:text-sm flex items-center gap-1"
                 >
-                  <Copy size={16} />
-                  <span>Duplicar</span>
+                  <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Duplicar</span>
                 </button>
                 
                 <button
                   onClick={() => handleEliminar(distribucion.id)}
-                  className="btn-secondary py-2 px-3 text-sm text-destructive hover:bg-destructive/10 flex items-center gap-1"
+                  className="btn-secondary py-2 px-2 sm:px-3 text-xs sm:text-sm text-destructive hover:bg-destructive/10 flex items-center gap-1"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
@@ -183,8 +183,8 @@ export default function MisDistribucionesPage() {
       {/* Modal crear distribución */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-card rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-4">Nueva Distribución</h2>
+          <div className="bg-card rounded-xl p-4 sm:p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg sm:text-xl font-bold mb-4">Nueva Distribución</h2>
             
             <div className="space-y-4">
               <div>
