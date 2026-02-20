@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDistribucionStore } from '@/store';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDistribucionStore, useHistorialStore, useTransaccionStore } from '@/store';
 import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO, ICONOS_DISPONIBLES, ICONOS_EMOJI } from '@/utils/constants';
-import { generarId } from '@/utils/helpers';
-import type { Rubro } from '@/types';
+import { generarId, formatearFecha } from '@/utils/helpers';
+import type { Rubro, HistorialRegistro, DistribucionDetalle } from '@/types';
 import { 
   Plus, 
   Trash2, 
@@ -14,7 +14,9 @@ import {
   Upload,
   ChevronUp,
   ChevronDown,
-  Palette as ColorIcon
+  Palette as ColorIcon,
+  ChevronDown as SelectChevron,
+  Calendar
 } from 'lucide-react';
 
 // Componente selector de color colapsable
@@ -116,14 +118,38 @@ function IconSelector({ icono, onChange }: { icono: string | undefined; onChange
 
 export default function ConfiguracionPage() {
   const navigate = useNavigate();
-  const { distribucionActivaId, getDistribucionActiva, actualizarDistribucion } = useDistribucionStore();
+  const [searchParams] = useSearchParams();
+  const { distribuciones, actualizarDistribucion } = useDistribucionStore();
+  const { agregarRegistro: guardarEnHistorial } = useHistorialStore();
+  const { getTotalIngresos, getTotalGastos, getDisponible } = useTransaccionStore();
   
-  const distribucion = getDistribucionActiva();
+  // Obtener distribución por ID de URL o usar la primera
+  const distribucionIdFromUrl = searchParams.get('id');
+  const distribucion = distribucionIdFromUrl 
+    ? distribuciones.find(d => d.id === distribucionIdFromUrl) 
+    : distribuciones[0] || null;
+  
+  const [distribucionSeleccionadaId, setDistribucionSeleccionadaId] = useState<string>(
+    distribucion?.id || ''
+  );
+  const [fechaHistorial, setFechaHistorial] = useState<string>(
+    new Date().toISOString().split('T')[0]
+  );
+  
   const rubros = distribucion?.rubros || [];
   
   const [nombre, setNombre] = useState(distribucion?.nombre || '');
   const [rubrosEditados, setRubrosEditados] = useState<Rubro[]>(rubros);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Actualizar estados cuando cambia la distribución seleccionada
+  useEffect(() => {
+    const dist = distribuciones.find(d => d.id === distribucionSeleccionadaId);
+    if (dist) {
+      setNombre(dist.nombre);
+      setRubrosEditados([...dist.rubros]);
+    }
+  }, [distribucionSeleccionadaId, distribuciones]);
   
   const sumaPorcentajes = rubrosEditados
     .filter(r => !r.es_resto)
@@ -176,16 +202,27 @@ export default function ConfiguracionPage() {
   };
   
   const handleGuardar = () => {
-    if (!distribucion) {
+    if (!distribucionSeleccionadaId) {
       // Crear nueva distribución
       const nueva = useDistribucionStore.getState().agregarDistribucion(nombre || 'Nueva Distribución');
+      const rubrosDefault: Rubro[] = RUBROS_POR_DEFECTO.map((r, index) => ({
+        id: generarId(),
+        distribucion_id: nueva.id,
+        nombre: r.nombre,
+        porcentaje: r.porcentaje,
+        color: r.color,
+        icono: r.icono,
+        es_resto: false,
+        orden: index + 1
+      }));
       actualizarDistribucion(nueva.id, {
         nombre: nombre || 'Nueva Distribución',
-        rubros: rubrosEditados
+        rubros: rubrosDefault
       });
-      useDistribucionStore.getState().activarDistribucion(nueva.id);
+      setDistribucionSeleccionadaId(nueva.id);
     } else {
-      actualizarDistribucion(distribucion.id, {
+      // Actualizar distribución existente
+      actualizarDistribucion(distribucionSeleccionadaId, {
         nombre,
         rubros: rubrosEditados
       });
@@ -195,48 +232,183 @@ export default function ConfiguracionPage() {
     setTimeout(() => setIsSaving(false), 1000);
   };
   
+  const handleGuardarEnHistorial = () => {
+    if (!distribucionSeleccionadaId || !nombre) return;
+    
+    // Calcular el detalle de la distribución
+    const totalIngresos = getTotalIngresos();
+    const totalGastos = getTotalGastos();
+    const disponible = getDisponible();
+    
+    const detalle: DistribucionDetalle[] = rubrosEditados
+      .filter(r => !r.es_resto)
+      .map(r => ({
+        rubro_nombre: r.nombre,
+        porcentaje: r.porcentaje,
+        monto: Math.round((disponible * r.porcentaje) / 100),
+        icono: r.icono,
+        color: r.color
+      }));
+    
+    // Guardar en historial
+    guardarEnHistorial({
+      usuario_id: '',
+      distribucion_id: distribucionSeleccionadaId,
+      distribucion_nombre: nombre,
+      fecha: fechaHistorial,
+      total_ingresos: totalIngresos,
+      total_gastos: totalGastos,
+      dinero_disponible: disponible,
+      distribucion_detalle: detalle
+    });
+    
+    setIsSaving(true);
+    setTimeout(() => setIsSaving(false), 1000);
+  };
+  
   return (
-    <div className="space-y-4 sm:space-y-6 animate-in pb-20 lg:pb-0">
-      {/* Header móvil con botones de acción */}
-      <div className="lg:hidden fixed top-14 left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center justify-between">
-        {/* Botón agregar a la izquierda */}
-        <button
-          onClick={handleAgregarRubro}
-          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
-        >
-          <Plus className="w-5 h-5" />
-        </button>
+    <div className="flex flex-col h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)]">
+      {/* Selector de distribución y nombre - fijo en la parte superior */}
+      <div className="flex-shrink-0 bg-card rounded-xl p-4 border border-border space-y-3">
+        {/* Selector de distribución */}
+        {distribuciones.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Seleccionar Distribución</label>
+            <div className="relative">
+              <select
+                value={distribucionSeleccionadaId}
+                onChange={(e) => setDistribucionSeleccionadaId(e.target.value)}
+                className="input-field appearance-none pr-10"
+              >
+                <option value="">Nueva Distribución</option>
+                {distribuciones.map((d) => (
+                  <option key={d.id} value={d.id}>{d.nombre}</option>
+                ))}
+              </select>
+              <SelectChevron className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </div>
+        )}
         
-        {/* Spacer en el centro */}
-        <div className="flex-1" />
+        <div>
+          <label className="block font-medium">Nombre de la Distribución</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Ej: Sueldo Fijo"
+            className="input-field"
+          />
+        </div>
         
-        {/* Botón guardar a la derecha */}
+        {/* Fecha para guardar en historial */}
+        <div>
+          <label className="block text-sm font-medium mb-1 flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            Fecha para guardar en historial
+          </label>
+          <input
+            type="date"
+            value={fechaHistorial}
+            onChange={(e) => setFechaHistorial(e.target.value)}
+            className="input-field"
+          />
+        </div>
+        
+        {/* Botón guardar en historial */}
         <button
-          onClick={handleGuardar}
-          disabled={isSaving || sumaPorcentajes > 100}
-          className="w-10 h-10 rounded-full bg-success text-white flex items-center justify-center shadow-lg disabled:opacity-50"
+          onClick={handleGuardarEnHistorial}
+          disabled={isSaving || !distribucionSeleccionadaId || !nombre || sumaPorcentajes > 100}
+          className="w-full btn-primary py-2 flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          <Save className="w-5 h-5" />
+          <Save className="w-4 h-4" />
+          <span>{isSaving ? 'Guardando...' : 'Guardar en Historial'}</span>
         </button>
       </div>
-
-      {/* Spacer para el header fijo móvil */}
-      <div className="lg:hidden h-16" />
       
-      {/* Nombre de distribución */}
+      {/* Menú inferior móvil con botones de acción */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border">
+        <div className="flex items-center justify-between h-16 px-4">
+          {/* Espaciador a la izquierda */}
+          <div className="w-10" />
+          
+          {/* Botón agregar - centro, más resaltado */}
+          <button
+            onClick={handleAgregarRubro}
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg -mt-6"
+          >
+            <Plus className="w-6 h-6" />
+          </button>
+          
+          {/* Botón guardar a la derecha */}
+          <button
+            onClick={handleGuardarEnHistorial}
+            disabled={isSaving || !distribucionSeleccionadaId || !nombre || sumaPorcentajes > 100}
+            className="w-10 h-10 rounded-full bg-success text-white flex items-center justify-center disabled:opacity-50"
+          >
+            <Save className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
       <div className="bg-card rounded-xl p-4 border border-border space-y-3">
-        <label className="block font-medium">Nombre de la Distribución</label>
-        <input
-          type="text"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          placeholder="Ej: Sueldo Fijo"
-          className="input-field"
-        />
+        {/* Selector de distribución */}
+        {distribuciones.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Seleccionar Distribución</label>
+            <div className="relative">
+              <select
+                value={distribucionSeleccionadaId}
+                onChange={(e) => setDistribucionSeleccionadaId(e.target.value)}
+                className="input-field appearance-none pr-10"
+              >
+                <option value="">Nueva Distribución</option>
+                {distribuciones.map((d) => (
+                  <option key={d.id} value={d.id}>{d.nombre}</option>
+                ))}
+              </select>
+              <SelectChevron className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </div>
+        )}
+        
+        <div>
+          <label className="block font-medium">Nombre de la Distribución</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Ej: Sueldo Fijo"
+            className="input-field"
+          />
+        </div>
+        
+        {/* Fecha para guardar en historial */}
+        <div>
+          <label className="block text-sm font-medium mb-1 flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            Fecha para guardar en historial
+          </label>
+          <input
+            type="date"
+            value={fechaHistorial}
+            onChange={(e) => setFechaHistorial(e.target.value)}
+            className="input-field"
+          />
+        </div>
+        
+        {/* Botón guardar en historial */}
+        <button
+          onClick={handleGuardarEnHistorial}
+          disabled={isSaving || !distribucionSeleccionadaId || !nombre || sumaPorcentajes > 100}
+          className="w-full btn-primary py-2 flex items-center justify-center gap-2 disabled:opacity-50"
+        >
+          <Save className="w-4 h-4" />
+          <span>{isSaving ? 'Guardando...' : 'Guardar en Historial'}</span>
+        </button>
       </div>
       
-      {/* Rubros */}
-      <div className="bg-card rounded-xl p-3 sm:p-4 border border-border space-y-4">
+      {/* Rubros - scrolleable */}
+      <div className="flex-1 overflow-y-auto bg-card rounded-xl p-3 sm:p-4 border border-border space-y-4 min-h-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <h2 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
             <Settings className="w-4 h-4 sm:w-5 sm:h-5" />

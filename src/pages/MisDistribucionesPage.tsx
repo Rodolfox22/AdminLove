@@ -9,14 +9,13 @@ import {
   Edit, 
   Trash2, 
   Copy, 
-  Check,
   ChevronDown,
   Settings
 } from 'lucide-react';
 
 export default function MisDistribucionesPage() {
   const navigate = useNavigate();
-  const { distribuciones, agregarDistribucion, actualizarDistribucion, eliminarDistribucion, duplicarDistribucion, activarDistribucion } = useDistribucionStore();
+  const { distribuciones, agregarDistribucion, actualizarDistribucion, eliminarDistribucion, duplicarDistribucion } = useDistribucionStore();
   
   const [showDeleted, setShowDeleted] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -105,11 +104,7 @@ export default function MisDistribucionesPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    {distribucion.es_activa ? (
-                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                    ) : (
-                      <span className="text-sm sm:text-base">📋</span>
-                    )}
+                    <span className="text-sm sm:text-base">📋</span>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm sm:text-base">{distribucion.nombre}</h3>
@@ -176,16 +171,6 @@ export default function MisDistribucionesPage() {
               
               {/* Acciones */}
               <div className="flex flex-wrap gap-2">
-                {!distribucion.es_activa && (
-                  <button
-                    onClick={() => handleActivar(distribucion.id)}
-                    className="flex-1 sm:flex-none btn-primary py-2 px-3 text-xs sm:text-sm flex items-center justify-center gap-1"
-                  >
-                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>Activar</span>
-                  </button>
-                )}
-                
                 <button
                   onClick={() => handleDuplicar(distribucion.id)}
                   className="btn-secondary py-2 px-2 sm:px-3 text-xs sm:text-sm flex items-center gap-1"
