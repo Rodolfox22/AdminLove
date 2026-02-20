@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTransaccionStore, useConfiguracionStore } from '@/store';
 import { formatearMonto, generarId } from '@/utils/helpers';
 import type { Transaccion } from '@/types';

@@ -15,24 +15,12 @@ import {
   User,
   ChevronRight,
   Info,
-  List,
-  Plus,
-  Save,
-  ChevronDown,
-  ChevronUp
+  List
 } from 'lucide-react';
 
-interface NavbarProps {
-  onSave?: () => void;
-  showSaveButton?: boolean;
-  showNewButton?: boolean;
-  onNew?: () => void;
-}
-
-export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }: NavbarProps) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { usuario, logout } = useAuthStore();
@@ -46,10 +34,10 @@ export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }:
   const getPageTitle = () => {
     switch (location.pathname) {
       case '/': return 'Inicio';
-      case '/distribuir': return 'Distribuir';
+      case '/distribuir': return 'Dividir';
       case '/mis-distribuciones': return 'Mis Distribuciones';
       case '/historial': return 'Historial';
-      case '/configuracion': return 'Configuración';
+      case '/configuracion': return 'Ajustes';
       case '/resultados': return 'Resultados';
       default: return 'AdminLove';
     }
@@ -57,10 +45,10 @@ export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }:
 
   const navItems = [
     { path: '/', label: 'Inicio', icon: Home },
-    { path: '/distribuir', label: 'Distribuir', icon: DollarSign },
+    { path: '/distribuir', label: 'Dividir', icon: DollarSign },
     { path: '/mis-distribuciones', label: 'Mis Distribuciones', icon: List },
     { path: '/historial', label: 'Historial', icon: History },
-    { path: '/configuracion', label: 'Configuración', icon: Settings }
+    { path: '/configuracion', label: 'Ajustes', icon: Settings }
   ];
 
   // Elementos para el bottom navigation
@@ -83,15 +71,6 @@ export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }:
           </div>
           
           <div className="flex items-center gap-1 sm:gap-2">
-            {showSaveButton && onSave && (
-              <button
-                onClick={onSave}
-                className="p-2 rounded-lg hover:bg-accent text-primary"
-                aria-label="Guardar"
-              >
-                <Save className="w-5 h-5 sm:size-5" />
-              </button>
-            )}
             <button
               onClick={() => setShowAbout(true)}
               className="p-2 rounded-lg hover:bg-accent"
@@ -169,21 +148,6 @@ export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }:
               </Link>
             );
           })}
-          
-          {showNewButton && onNew && (
-            <button
-              onClick={() => onNew()}
-              className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-primary -mt-6"
-            >
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
-                <Plus size={28} />
-              </div>
-              <span className="text-xs">Nuevo</span>
-            </button>
-          )}
-          
-          {/* Espaciador si no hay botón nuevo */}
-          {!showNewButton && <div className="flex-1" />}
         </div>
       </nav>
 

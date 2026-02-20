@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDistribucionStore } from '@/store';
 import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO, ICONOS_DISPONIBLES, ICONOS_EMOJI } from '@/utils/constants';
 import { generarId } from '@/utils/helpers';
@@ -118,12 +118,6 @@ export default function ConfiguracionPage() {
   const navigate = useNavigate();
   const { distribucionActivaId, getDistribucionActiva, actualizarDistribucion } = useDistribucionStore();
   
-  // Contexto para pasar funciones al Navbar
-  const { setSaveAction, setNewAction } = useOutletContext<{
-    setSaveAction?: (action: () => void) => void;
-    setNewAction?: (action: () => void) => void;
-  }>();
-  
   const distribucion = getDistribucionActiva();
   const rubros = distribucion?.rubros || [];
   
@@ -200,21 +194,6 @@ export default function ConfiguracionPage() {
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 1000);
   };
-  
-  // Registrar las funciones de guardado y nuevo en el contexto del outlet
-  useEffect(() => {
-    if (setSaveAction) {
-      setSaveAction(handleGuardar);
-    }
-    if (setNewAction) {
-      setNewAction(handleAgregarRubro);
-    }
-    
-    return () => {
-      if (setSaveAction) setSaveAction(() => {});
-      if (setNewAction) setNewAction(() => {});
-    };
-  }, [setSaveAction, setNewAction, handleGuardar, handleAgregarRubro]);
   
   return (
     <div className="space-y-4 sm:space-y-6 animate-in">
