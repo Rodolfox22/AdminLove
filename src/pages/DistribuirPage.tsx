@@ -63,10 +63,10 @@ export default function DistribuirPage() {
   };
   
   return (
-    <div className="space-y-6 animate-in">
+    <div className="space-y-4 sm:space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Distribuir Ingresos</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Distribuir Ingresos</h1>
         <div className="flex gap-2">
           <button
             onClick={handleLimpiarTodo}
@@ -103,22 +103,22 @@ export default function DistribuirPage() {
       </div>
       
       {/* Input nuevo */}
-      <div className="bg-card rounded-xl p-4 border border-border space-y-3">
-        <div className="flex gap-3">
+      <div className="bg-card rounded-xl p-3 sm:p-4 border border-border space-y-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={nuevoMonto}
             onChange={(e) => setNuevoMonto(formatearInput(e.target.value))}
             placeholder="0.00"
-            className="flex-1 text-3xl font-bold bg-transparent border-b-2 border-border focus:border-primary outline-none py-2"
+            className="flex-1 text-2xl sm:text-3xl font-bold bg-transparent border-b-2 border-border focus:border-primary outline-none py-2"
             disabled={tipoActual === 'gasto' && disponible <= 0}
           />
           <button
             onClick={handleAgregar}
             disabled={!nuevoMonto || parseFloat(nuevoMonto) <= 0}
-            className="btn-primary px-6 flex items-center gap-2"
+            className="btn-primary px-4 sm:px-6 flex items-center justify-center gap-2"
           >
-            <Plus size={20} />
+            <Plus className="w-5 h-5" />
             <span>Agregar</span>
           </button>
         </div>
@@ -219,11 +219,11 @@ export default function DistribuirPage() {
       <button
         onClick={handleVerResultados}
         disabled={transacciones.length === 0 || disponible < 0}
-        className="w-full btn-primary py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full btn-primary py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <span>📊</span>
+        <span className="text-lg">📊</span>
         <span>Ver Resultados</span>
-        <ArrowRight size={20} />
+        <ArrowRight className="w-5 h-5" />
       </button>
       
       {disponible < 0 && (

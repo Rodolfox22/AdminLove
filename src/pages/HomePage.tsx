@@ -26,11 +26,11 @@ export default function HomePage() {
   return (
     <div className="space-y-6 animate-in">
       {/* Saludo */}
-      <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-6">
-        <h1 className="text-2xl font-bold">
+      <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-4 sm:p-6">
+        <h1 className="text-xl sm:text-2xl font-bold">
           ¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
           Administra tus ingresos con sabiduría y propósito
         </p>
       </div>
@@ -38,40 +38,40 @@ export default function HomePage() {
       {/* Botón principal */}
       <button
         onClick={handleNuevaDistribucion}
-        className="w-full btn-primary py-4 text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
+        className="w-full btn-primary py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
       >
-        <Plus size={24} />
+        <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
         <span>Iniciar Nueva Distribución</span>
-        <ChevronRight size={20} />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
       
       {/* Estadísticas rápidas */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-card rounded-xl p-4 border border-border">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
-            <TrendingUp size={16} />
+            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="text-xs">Ingresos</span>
           </div>
-          <p className="text-lg font-semibold text-ingreso">
+          <p className="text-base sm:text-lg font-semibold text-ingreso">
             {formatearMonto(getTotalIngresos())}
           </p>
         </div>
         
-        <div className="bg-card rounded-xl p-4 border border-border">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
-            <DollarSign size={16} />
+            <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="text-xs">Gastos</span>
           </div>
-          <p className="text-lg font-semibold text-gasto">
+          <p className="text-base sm:text-lg font-semibold text-gasto">
             {formatearMonto(getTotalGastos())}
           </p>
         </div>
         
-        <div className="bg-card rounded-xl p-4 border border-border">
+        <div className="bg-card rounded-xl p-3 sm:p-4 border border-border col-span-2 sm:col-span-1">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <span className="text-xs">Disponible</span>
           </div>
-          <p className={`text-lg font-semibold ${disponible >= 0 ? 'text-primary' : 'text-destructive'}`}>
+          <p className={`text-base sm:text-lg font-semibold ${disponible >= 0 ? 'text-primary' : 'text-destructive'}`}>
             {formatearMonto(disponible)}
           </p>
         </div>
@@ -110,10 +110,10 @@ export default function HomePage() {
             onClick={() => navigate('/mis-distribuciones')}
             className="flex items-center gap-3 p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-left"
           >
-            <span className="text-2xl">📋</span>
+            <span className="text-xl sm:text-2xl">📋</span>
             <div>
               <p className="font-medium text-sm">Mis Distribuciones</p>
-              <p className="text-xs text-muted-foreground">Gestionar plantillas</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Gestionar plantillas</p>
             </div>
           </button>
           
@@ -121,10 +121,10 @@ export default function HomePage() {
             onClick={() => navigate('/historial')}
             className="flex items-center gap-3 p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-left"
           >
-            <span className="text-2xl">📊</span>
+            <span className="text-xl sm:text-2xl">📊</span>
             <div>
               <p className="font-medium text-sm">Ver Historial</p>
-              <p className="text-xs text-muted-foreground">Todas las transacciones</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Todas las transacciones</p>
             </div>
           </button>
         </div>
