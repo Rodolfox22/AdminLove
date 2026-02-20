@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDistribucionStore } from '@/store';
 import { RUBROS_POR_DEFECTO } from '@/utils/constants';
@@ -10,7 +10,7 @@ import {
   Trash2, 
   Copy, 
   Check,
-  ChevronRight,
+  ChevronDown,
   Settings
 } from 'lucide-react';
 
@@ -128,24 +128,50 @@ export default function MisDistribucionesPage() {
               </div>
               
               {/* Preview de rubros */}
-              <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
-                {distribucion.rubros.slice(0, 5).map((rubro) => (
-                  <div
-                    key={rubro.id}
-                    className="flex items-center gap-1 px-2 py-1 rounded-full bg-muted text-xs whitespace-nowrap"
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: rubro.color }}
-                    />
-                    <span>{rubro.porcentaje}%</span>
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    const el = document.getElementById(`rubros-${distribucion.id}`);
+                    if (el) el.classList.toggle('hidden');
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-sm w-full justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex -space-x-1">
+                      {distribucion.rubros.slice(0, 4).map((rubro) => (
+                        <div
+                          key={rubro.id}
+                          className="w-3 h-3 rounded-full ring-1 ring-background"
+                          style={{ backgroundColor: rubro.color }}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-muted-foreground">
+                      {distribucion.rubros.length} rubros
+                    </span>
                   </div>
-                ))}
-                {distribucion.rubros.length > 5 && (
-                  <span className="text-xs text-muted-foreground">
-                    +{distribucion.rubros.length - 5} más
-                  </span>
-                )}
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                </button>
+                
+                {/* Dropdown con todos los rubros */}
+                <div
+                  id={`rubros-${distribucion.id}`}
+                  className="hidden absolute z-10 left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg p-2 space-y-1"
+                >
+                  {distribucion.rubros.map((rubro) => (
+                    <div
+                      key={rubro.id}
+                      className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted"
+                    >
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: rubro.color }}
+                      />
+                      <span className="flex-1 text-sm">{rubro.nombre}</span>
+                      <span className="text-xs text-muted-foreground">{rubro.porcentaje}%</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               
               {/* Acciones */}
