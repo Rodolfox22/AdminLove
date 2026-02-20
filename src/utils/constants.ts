@@ -50,6 +50,22 @@ export const ICONOS_DISPONIBLES = [
   'smile'
 ] as const;
 
+// Mapeo de iconos a emoji para compatibilidad
+export const ICONOS_EMOJI: Record<string, string> = {
+  church: '🏛️',
+  heart: '💖',
+  utensils: '🍴',
+  car: '🚗',
+  zap: '⚡',
+  home: '🏠',
+  briefcase: '💼',
+  wallet: '👛',
+  'piggy-bank': '🐷',
+  gift: '🎁',
+  star: '⭐',
+  smile: '😊'
+};
+
 export const MONEDAS = [
   { codigo: 'ARS', simbolo: '$', nombre: 'Peso Argentino' },
   { codigo: 'USD', simbolo: 'US$', nombre: 'Dólar Estadounidense' },

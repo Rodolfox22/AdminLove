@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDistribucionStore } from '@/store';
-import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO } from '@/utils/constants';
+import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO, ICONOS_DISPONIBLES, ICONOS_EMOJI } from '@/utils/constants';
 import { generarId } from '@/utils/helpers';
 import type { Rubro } from '@/types';
 import { 
@@ -13,8 +13,106 @@ import {
   Download,
   Upload,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Palette as ColorIcon
 } from 'lucide-react';
+
+// Componente selector de color colapsable
+function ColorSelector({ color, onChange }: { color: string; onChange: (color: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110 ring-2 ring-offset-2 ring-primary/50"
+        style={{ backgroundColor: color }}
+        title="Cambiar color"
+      >
+        <Palette className="w-4 h-4 text-white drop-shadow-md" />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-20 left-0 top-10 bg-card border border-border rounded-lg shadow-lg p-2 grid grid-cols-4 gap-1 w-36">
+          {COLORES_DISPONIBLES.map((c) => (
+            <button
+              key={c}
+              onClick={() => {
+                onChange(c);
+                setIsOpen(false);
+              }}
+              className={`w-7 h-7 rounded-full transition-transform ${
+                color === c ? 'scale-110 ring-2 ring-primary' : 'hover:scale-105'
+              }`}
+              style={{ backgroundColor: c }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Componente selector de icono
+function IconSelector({ icono, onChange }: { icono: string | undefined; onChange: (icono: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const currentIcon = icono || 'star';
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-8 h-8 rounded-lg flex items-center justify-center bg-muted hover:bg-accent transition-colors text-lg"
+        title="Cambiar icono"
+      >
+        {ICONOS_EMOJI[currentIcon] || '📦'}
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-20 left-0 top-10 bg-card border border-border rounded-lg shadow-lg p-2 grid grid-cols-4 gap-1 w-36">
+          {ICONOS_DISPONIBLES.map((icon) => (
+            <button
+              key={icon}
+              onClick={() => {
+                onChange(icon);
+                setIsOpen(false);
+              }}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-transform ${
+                currentIcon === icon ? 'bg-primary/20 ring-2 ring-primary' : 'hover:bg-accent hover:scale-105'
+              }`}
+              title={icon}
+            >
+              {ICONOS_EMOJI[icon]}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ConfiguracionPage() {
   const navigate = useNavigate();
@@ -160,19 +258,17 @@ export default function ConfiguracionPage() {
                 </button>
               </div>
               
-              {/* Color */}
-              <div className="flex gap-1">
-                {COLORES_DISPONIBLES.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => handleActualizarRubro(rubro.id, { color })}
-                    className={`w-6 h-6 rounded-full transition-transform ${
-                      rubro.color === color ? 'scale-110 ring-2 ring-offset-2 ring-primary' : ''
-                    }`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
+            {/* Color - Selector colapsable */}
+              <ColorSelector
+                color={rubro.color}
+                onChange={(color) => handleActualizarRubro(rubro.id, { color })}
+              />
+              
+              {/* Icono - Selector */}
+              <IconSelector
+                icono={rubro.icono}
+                onChange={(icono) => handleActualizarRubro(rubro.id, { icono })}
+              />
               
               {/* Nombre y porcentaje */}
               <input
