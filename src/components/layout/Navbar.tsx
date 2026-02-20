@@ -15,12 +15,24 @@ import {
   User,
   ChevronRight,
   Info,
-  List
+  List,
+  Plus,
+  Save,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
-export default function Navbar() {
+interface NavbarProps {
+  onSave?: () => void;
+  showSaveButton?: boolean;
+  showNewButton?: boolean;
+  onNew?: () => void;
+}
+
+export default function Navbar({ onSave, showSaveButton, showNewButton, onNew }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { usuario, logout } = useAuthStore();
@@ -28,6 +40,19 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     navigate('/auth');
+  };
+
+  // Obtener el título de la página actual
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/': return 'Inicio';
+      case '/distribuir': return 'Distribuir';
+      case '/mis-distribuciones': return 'Mis Distribuciones';
+      case '/historial': return 'Historial';
+      case '/configuracion': return 'Configuración';
+      case '/resultados': return 'Resultados';
+      default: return 'AdminLove';
+    }
   };
 
   const navItems = [
@@ -38,17 +63,35 @@ export default function Navbar() {
     { path: '/configuracion', label: 'Configuración', icon: Settings }
   ];
 
+  // Elementos para el bottom navigation
+  const bottomNavItems = [
+    { path: '/', label: 'Inicio', icon: Home },
+    { path: '/distribuir', label: 'Dividir', icon: DollarSign },
+    { path: '/configuracion', label: 'Ajustes', icon: Settings }
+  ];
+
   return (
     <>
-      {/* Navbar móvil */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border lg:hidden">
+      {/* Header superior móvil con título */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border lg:hidden">
         <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4">
-          <Link to="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl">
-            <span className="text-primary">💰</span>
-            <span className="hidden sm:inline">AdminLove</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl">
+              <span className="text-primary">💰</span>
+            </Link>
+            <span className="font-semibold text-lg">{getPageTitle()}</span>
+          </div>
           
           <div className="flex items-center gap-1 sm:gap-2">
+            {showSaveButton && onSave && (
+              <button
+                onClick={onSave}
+                className="p-2 rounded-lg hover:bg-accent text-primary"
+                aria-label="Guardar"
+              >
+                <Save className="w-5 h-5 sm:size-5" />
+              </button>
+            )}
             <button
               onClick={() => setShowAbout(true)}
               className="p-2 rounded-lg hover:bg-accent"
@@ -66,9 +109,9 @@ export default function Navbar() {
           </div>
         </div>
         
-        {/* Menú móvil */}
+        {/* Menú desplegable superior */}
         {isOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-background border-b border-border p-4 space-y-2 animate-in">
+          <div className="absolute top-14 sm:top-16 left-0 right-0 bg-background border-b border-border p-4 space-y-2 animate-in max-h-80 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -101,6 +144,47 @@ export default function Navbar() {
             </button>
           </div>
         )}
+      </header>
+
+      {/* Bottom Navigation para móviles */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border lg:hidden">
+        <div className="flex items-center justify-around h-16 px-2">
+          {bottomNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 p-2 rounded-lg transition-colors flex-1',
+                  isActive
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Icon size={22} />
+                <span className="text-xs">{item.label}</span>
+              </Link>
+            );
+          })}
+          
+          {showNewButton && onNew && (
+            <button
+              onClick={() => onNew()}
+              className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-primary -mt-6"
+            >
+              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                <Plus size={28} />
+              </div>
+              <span className="text-xs">Nuevo</span>
+            </button>
+          )}
+          
+          {/* Espaciador si no hay botón nuevo */}
+          {!showNewButton && <div className="flex-1" />}
+        </div>
       </nav>
 
       {/* Sidebar escritorio */}
@@ -136,14 +220,6 @@ export default function Navbar() {
         </nav>
         
         <div className="p-4 border-t border-border space-y-2">
-          <Link
-            to="/mis-distribuciones"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors"
-          >
-            <DollarSign size={20} />
-            <span>Mis Distribuciones</span>
-          </Link>
-          
           <button
             onClick={() => setShowAbout(true)}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-accent transition-colors text-left"
@@ -169,8 +245,12 @@ export default function Navbar() {
         </div>
       </aside>
 
-      {/* Spacer para el contenido */}
+      {/* Spacer para el contenido (header + bottom nav en móvil) */}
       <div className="h-16 lg:hidden" />
+      <div className="lg:hidden h-16" /> {/* Spacer adicional para bottom nav */}
+      
+      {/* Spacer solo para header en desktop */}
+      <div className="hidden lg:block h-16" />
       
       {/* About Dialog */}
       <AboutDialog isOpen={showAbout} onClose={() => setShowAbout(false)} />

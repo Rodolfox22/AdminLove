@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useDistribucionStore } from '@/store';
 import { COLORES_DISPONIBLES, RUBROS_POR_DEFECTO, ICONOS_DISPONIBLES, ICONOS_EMOJI } from '@/utils/constants';
 import { generarId } from '@/utils/helpers';
@@ -118,6 +118,12 @@ export default function ConfiguracionPage() {
   const navigate = useNavigate();
   const { distribucionActivaId, getDistribucionActiva, actualizarDistribucion } = useDistribucionStore();
   
+  // Contexto para pasar funciones al Navbar
+  const { setSaveAction, setNewAction } = useOutletContext<{
+    setSaveAction?: (action: () => void) => void;
+    setNewAction?: (action: () => void) => void;
+  }>();
+  
   const distribucion = getDistribucionActiva();
   const rubros = distribucion?.rubros || [];
   
@@ -170,6 +176,11 @@ export default function ConfiguracionPage() {
     setRubrosEditados(nuevosRubros);
   };
   
+  // Función para seleccionar el texto de un input al hacer clic
+  const handleSelectText = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.select();
+  };
+  
   const handleGuardar = () => {
     if (!distribucion) {
       // Crear nueva distribución
@@ -189,6 +200,21 @@ export default function ConfiguracionPage() {
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 1000);
   };
+  
+  // Registrar las funciones de guardado y nuevo en el contexto del outlet
+  useEffect(() => {
+    if (setSaveAction) {
+      setSaveAction(handleGuardar);
+    }
+    if (setNewAction) {
+      setNewAction(handleAgregarRubro);
+    }
+    
+    return () => {
+      if (setSaveAction) setSaveAction(() => {});
+      if (setNewAction) setNewAction(() => {});
+    };
+  }, [setSaveAction, setNewAction, handleGuardar, handleAgregarRubro]);
   
   return (
     <div className="space-y-4 sm:space-y-6 animate-in">
@@ -258,45 +284,52 @@ export default function ConfiguracionPage() {
                 </button>
               </div>
               
-            {/* Color e Icono - Selectores juntos */}
-              <div className="flex items-center gap-1">
-                <ColorSelector
-                  color={rubro.color}
-                  onChange={(color) => handleActualizarRubro(rubro.id, { color })}
-                />
-                <IconSelector
-                  icono={rubro.icono}
-                  onChange={(icono) => handleActualizarRubro(rubro.id, { icono })}
-                />
-              </div>
-              
-              {/* Nombre y porcentaje */}
-              <input
-                type="text"
-                value={rubro.nombre}
-                onChange={(e) => handleActualizarRubro(rubro.id, { nombre: e.target.value })}
-                className="flex-1 bg-transparent font-medium focus:outline-none text-sm min-w-0"
-                placeholder="Nombre"
-              />
-              <div className="flex items-center gap-1">
+              {/* Color e Icono, Nombre, Porcentaje y Eliminar - todos en la misma línea */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                {/* Color e Icono */}
+                <div className="flex items-center gap-1">
+                  <ColorSelector
+                    color={rubro.color}
+                    onChange={(color) => handleActualizarRubro(rubro.id, { color })}
+                  />
+                  <IconSelector
+                    icono={rubro.icono}
+                    onChange={(icono) => handleActualizarRubro(rubro.id, { icono })}
+                  />
+                </div>
+                
+                {/* Nombre */}
                 <input
-                  type="number"
-                  value={rubro.porcentaje}
-                  onChange={(e) => handleActualizarRubro(rubro.id, { porcentaje: parseInt(e.target.value) || 0 })}
-                  className="w-12 sm:w-16 text-center bg-transparent font-medium focus:outline-none border-b border-border text-sm"
-                  min="0"
-                  max="100"
+                  type="text"
+                  value={rubro.nombre}
+                  onChange={(e) => handleActualizarRubro(rubro.id, { nombre: e.target.value })}
+                  onClick={handleSelectText}
+                  className="flex-1 bg-transparent font-medium focus:outline-none text-sm min-w-0"
+                  placeholder="Nombre"
                 />
-                <span className="text-muted-foreground text-sm">%</span>
+                
+                {/* Porcentaje */}
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    value={rubro.porcentaje}
+                    onChange={(e) => handleActualizarRubro(rubro.id, { porcentaje: parseInt(e.target.value) || 0 })}
+                    onClick={handleSelectText}
+                    className="w-12 sm:w-16 text-center bg-transparent font-medium focus:outline-none border-b border-border text-sm"
+                    min="0"
+                    max="100"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
+                </div>
+                
+                {/* Eliminar */}
+                <button
+                  onClick={() => handleEliminarRubro(rubro.id)}
+                  className="p-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-              
-              {/* Eliminar */}
-              <button
-                onClick={() => handleEliminarRubro(rubro.id)}
-                className="p-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
-              >
-                <Trash2 size={16} />
-              </button>
             </div>
           ))}
         </div>
