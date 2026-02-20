@@ -24,7 +24,7 @@ export default function NotFoundPage() {
           </button>
           
           <Link
-            to="/"
+            to="/AdminLove/"
             className="btn-primary px-6 py-3 flex items-center gap-2"
           >
             <Home size={20} />
