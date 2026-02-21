@@ -44,9 +44,9 @@ export default function MisDistribucionesPage() {
     navigate('/configuracion');
   };
   
-  const handleActivar = (id: string) => {
+  /*const handleActivar = (id: string) => {
     activarDistribucion(id);
-  };
+  };*/
   
   const handleDuplicar = (id: string) => {
     duplicarDistribucion(id);
